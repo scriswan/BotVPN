@@ -50,12 +50,8 @@ FTVPN VPN Bot adalah bot serba otomatis untuk membeli layanan VPN dengan mudah d
 
 Jika Anda ingin berkontribusi pada proyek ini, silakan fork repository ini dan buat pull request dengan perubahan yang Anda usulkan.
 
-## Lisensi
-
-Proyek ini dilisensikan di bawah MIT License. Lihat file [LICENSE](LICENSE) untuk informasi lebih lanjut.
-
 ## Kontak
 
-Jika Anda memiliki pertanyaan atau masalah, silakan hubungi kami di [email@example.com](mailto:email@example.com).
+Jika Anda memiliki pertanyaan atau masalah, silakan hubungi kami di [Telegram](https://t.me/yha_bot).
 
 ✨ Selamat menggunakan layanan kami! ✨
