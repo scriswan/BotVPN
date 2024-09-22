@@ -186,6 +186,31 @@ dalam layanan VPN dengan bot kami!
     }
   }
 }
+bot.command('helpadmin', async (ctx) => {
+  const userId = ctx.message.from.id;
+  if (!adminIds.includes(userId)) {
+      return ctx.reply('⚠️ Anda tidak memiliki izin untuk menggunakan perintah ini.', { parse_mode: 'Markdown' });
+  }
+
+  const helpMessage = `
+*📋 Daftar Perintah Admin:*
+
+1. /addserver - Menambahkan server baru.
+2. /broadcast - Mengirim pesan siaran ke semua pengguna.
+3. /addsaldo - Menambahkan saldo ke akun pengguna.
+4. /editharga - Mengedit harga layanan.
+5. /editnama - Mengedit nama server.
+6. /editdomain - Mengedit domain server.
+7. /editauth - Mengedit auth server.
+8. /editlimitquota - Mengedit batas quota server.
+9. /editlimitip - Mengedit batas IP server.
+10. /editlimitcreate - Mengedit batas pembuatan akun server.
+
+Gunakan perintah ini dengan format yang benar untuk menghindari kesalahan.
+`;
+
+  ctx.reply(helpMessage, { parse_mode: 'Markdown' });
+});
 bot.command('broadcast', async (ctx) => {
   const userId = ctx.message.from.id;
   console.log(`Broadcast command received from user_id: ${userId}`);
