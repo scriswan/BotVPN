@@ -104,7 +104,7 @@ server_app() {
         fi
     done
     rm -f /root/BotVPN/.env
-    echo "BOT_TOKEN=$token
+    echo "TOKEN_BOT=$token
 USER_ID=$adminid
 PAYDISINI_KEY=$keypaydisini
 NAMA_STORE=$namastore
