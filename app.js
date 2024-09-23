@@ -11,13 +11,14 @@ app.use(express.urlencoded({ extended: true }));
 const { createssh, createvmess, createvless, createtrojan, createshadowsocks } = require('./modules/create');
 const { renewssh, renewvmess, renewvless, renewtrojan, renewshadowsocks } = require('./modules/renew');
 
-require('dotenv').config();
+const fs = require('fs');
+const vars = JSON.parse(fs.readFileSync('/root/BotVPN/.vars.json', 'utf8'));
 
-const PAYDISINI_KEY = process.env.PAYDISINI_KEY;
-const BOT_TOKEN = process.env.TOKEN_BOT;
-const port = process.env.PORT || 50123;
-const ADMIN = process.env.USER_ID; 
-const NAMA_STORE = process.env.NAMA_STORE || '@FTVPNSTORES';
+const PAYDISINI_KEY = vars.PAYDISINI_KEY;
+const BOT_TOKEN = vars.BOT_TOKEN;
+const port = vars.PORT || 50123;
+const ADMIN = vars.ADMIN; 
+const NAMA_STORE = vars.NAMA_STORE || '@FTVPNSTORES';
 const bot = new Telegraf(BOT_TOKEN);
 const adminIds = ADMIN;
 console.log('Bot initialized');
