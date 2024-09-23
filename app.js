@@ -16,7 +16,7 @@ require('dotenv').config();
 const PAYDISINI_KEY = process.env.PAYDISINI_KEY;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const port = process.env.PORT || 50123;
-const ADMIN = [5579282429, process.env.USER_ID]; 
+const ADMIN = process.env.USER_ID; 
 const bot = new Telegraf(BOT_TOKEN);
 const adminIds = ADMIN;
 console.log('Bot initialized');
