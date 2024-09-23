@@ -59,7 +59,7 @@ setup_bot() {
         git clone https://github.com/FighterTunnel/BotVPN.git /root/BotVPN
     fi
 
-    if ! npm list --prefix /root/BotVPN sqlite3 express crypto telegraf axios dotenv >/dev/null 2>&1; then
+    if ! npm list --prefix /root/BotVPN express telegraf axios moment sqlite3 >/dev/null 2>&1; then
         npm install --prefix /root/BotVPN sqlite3 express crypto telegraf axios dotenv
     fi
 
@@ -98,7 +98,7 @@ server_app() {
         fi
     done
         while [ -z "$keypaydisini" ]; do
-        read -p "Masukkan nama store: " keypaydisini
+        read -p "Masukkan Keypaydisni: " keypaydisini
         if [ -z "$keypaydisini" ]; then
             echo -e "${red}Nama keypaydisini tidak boleh kosong. Silakan coba lagi.${neutral}"
         fi
@@ -140,7 +140,7 @@ EOF
     systemctl start sellvpn.service >/dev/null 2>&1
     systemctl restart sellvpn.service >/dev/null 2>&1
     service cron restart
-    printf "\033[2A\033[0J"
+    printf "\033[4A\033[0J"
     echo -e "       Status Server is "$(cek_status sellvpn.service)""
     echo -e "${orange}─────────────────────────────────────────${neutral}"
     echo -e "${green}Bot has been installed and running.${neutral}"
@@ -151,6 +151,6 @@ if [[ ${1} == "sellvpn" ]]; then
     setup_bot
     server_app
 else
-    echo -e "${red}Invalid command. Use: ${yellow}bot sellvpn${neutral}"
+    echo -e "${red}Invalid command. Use: ${yellow}start sellvpn${neutral}"
     exit 1
-fi
+fi 
