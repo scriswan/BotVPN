@@ -20,7 +20,7 @@ FTVPN Bot adalah bot serba otomatis untuk membeli layanan VPN dengan mudah dan c
 
 1. Clone repository ini:
    ```bash
-   git clone https://github.com/username/BotVPN.git
+   git clone https://github.com/FighterTunnel/BotVPN.git
    ```
 2. Masuk ke direktori proyek:
    ```bash
