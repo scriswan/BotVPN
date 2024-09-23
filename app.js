@@ -17,6 +17,7 @@ const PAYDISINI_KEY = process.env.PAYDISINI_KEY;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const port = process.env.PORT || 50123;
 const ADMIN = process.env.USER_ID; 
+const NAMA_STORE = process.env.NAMA_STORE || '@FTVPNSTORES';
 const bot = new Telegraf(BOT_TOKEN);
 const adminIds = ADMIN;
 console.log('Bot initialized');
@@ -151,15 +152,15 @@ async function sendMainMenu(ctx) {
     console.error('Kesalahan saat mengambil jumlah pengguna:', err.message);
   }
 
-  const messageText = `*Selamat datang di FTVPN VPN Bot* 🚀
+  const messageText = `*Selamat datang di ${NAMA_STORE}, Powered by FTVPN* 🚀
 Bot VPN serba otomatis untuk membeli
 layanan VPN dengan mudah dan cepat
 Nikmati kemudahan dan kecepatan
 dalam layanan VPN dengan bot kami!
 
-*Uptime bot:* ${formattedUptime}
-*Server tersedia:* ${jumlahServer}
-*Jumlah pengguna:* ${jumlahPengguna}
+⏳ *Uptime bot:* ${formattedUptime}
+🌐 *Server tersedia:* ${jumlahServer}
+👥 *Jumlah pengguna:* ${jumlahPengguna}
 
 *Silakan pilih opsi layanan:*`;
 
@@ -205,12 +206,14 @@ bot.command('helpadmin', async (ctx) => {
 8. /editlimitquota - Mengedit batas quota server.
 9. /editlimitip - Mengedit batas IP server.
 10. /editlimitcreate - Mengedit batas pembuatan akun server.
+11. /edittotalcreate - Mengedit total pembuatan akun server.
 
 Gunakan perintah ini dengan format yang benar untuk menghindari kesalahan.
 `;
 
   ctx.reply(helpMessage, { parse_mode: 'Markdown' });
 });
+
 bot.command('broadcast', async (ctx) => {
   const userId = ctx.message.from.id;
   console.log(`Broadcast command received from user_id: ${userId}`);
@@ -524,25 +527,54 @@ bot.command('editlimitcreate', async (ctx) => {
       ctx.reply(`✅ Batas create akun server \`${domain}\` berhasil diubah menjadi \`${batas_create_akun}\`.`, { parse_mode: 'Markdown' });
   });
 });
+bot.command('edittotalcreate', async (ctx) => {
+  const userId = ctx.message.from.id;
+  if (!adminIds.includes(userId)) {
+      return ctx.reply('⚠️ Anda tidak memiliki izin untuk menggunakan perintah ini.', { parse_mode: 'Markdown' });
+  }
 
+  const args = ctx.message.text.split(' ');
+  if (args.length !== 3) {
+      return ctx.reply('⚠️ Format salah. Gunakan: `/edittotalcreate <domain> <total_create_akun>`', { parse_mode: 'Markdown' });
+  }
+
+  const [domain, total_create_akun] = args.slice(1);
+
+  if (!/^\d+$/.test(total_create_akun)) {
+      return ctx.reply('⚠️ `total_create_akun` harus berupa angka.', { parse_mode: 'Markdown' });
+  }
+
+  db.run("UPDATE Server SET total_create_akun = ? WHERE domain = ?", [parseInt(total_create_akun), domain], function(err) {
+      if (err) {
+          console.error('⚠️ Kesalahan saat mengedit total_create_akun server:', err.message);
+          return ctx.reply('⚠️ Kesalahan saat mengedit total_create_akun server.', { parse_mode: 'Markdown' });
+      }
+
+      if (this.changes === 0) {
+          return ctx.reply('⚠️ Server tidak ditemukan.', { parse_mode: 'Markdown' });
+      }
+
+      ctx.reply(`✅ Total create akun server \`${domain}\` berhasil diubah menjadi \`${total_create_akun}\`.`, { parse_mode: 'Markdown' });
+  });
+});
 async function handleServiceAction(ctx, action) {
   let keyboard;
   if (action === 'create') {
     keyboard = [
-      [{ text: '🍏 Create SSH/OVPN', callback_data: 'create_ssh' }],      
-      [{ text: '🍏 Create Vmess', callback_data: 'create_vmess' }],
-      [{ text: '🍏 Create Vless', callback_data: 'create_vless' }],
-      [{ text: '🍏 Create Trojan', callback_data: 'create_trojan' }],
-      [{ text: '🍏 Create Shadowsocks', callback_data: 'create_shadowsocks' }],
+      [{ text: '🍎 Create SSH/OVPN', callback_data: 'create_ssh' }],      
+      [{ text: '🍌 Create Vmess', callback_data: 'create_vmess' }],
+      [{ text: '🍇 Create Vless', callback_data: 'create_vless' }],
+      [{ text: '🍉 Create Trojan', callback_data: 'create_trojan' }],
+      [{ text: '🍓 Create Shadowsocks', callback_data: 'create_shadowsocks' }],
       [{ text: '🔙 Kembali', callback_data: 'send_main_menu' }]
     ];
   } else if (action === 'renew') {
     keyboard = [
-      [{ text: '🍊 Renew SSH/OVPN', callback_data: 'renew_ssh' }],      
-      [{ text: '🍊 Renew Vmess', callback_data: 'renew_vmess' }],
-      [{ text: '🍊 Renew Vless', callback_data: 'renew_vless' }],
-      [{ text: '🍊 Renew Trojan', callback_data: 'renew_trojan' }],
-      [{ text: '🍊 Renew Shadowsocks', callback_data: 'renew_shadowsocks' }],
+      [{ text: '🍎 Renew SSH/OVPN', callback_data: 'renew_ssh' }],      
+      [{ text: '🍌 Renew Vmess', callback_data: 'renew_vmess' }],
+      [{ text: '🍇 Renew Vless', callback_data: 'renew_vless' }],
+      [{ text: '🍉 Renew Trojan', callback_data: 'renew_trojan' }],
+      [{ text: '🍓 Renew Shadowsocks', callback_data: 'renew_shadowsocks' }],
       [{ text: '🔙 Kembali', callback_data: 'send_main_menu' }]
     ];
   } 
@@ -585,14 +617,17 @@ async function sendAdminMenu(ctx) {
     ],
     [
       { text: '🔢 Edit Batas Create', callback_data: 'editserver_batas_create_akun' },
-      { text: '💵 Tambah Saldo', callback_data: 'addsaldo_user' }
+      { text: '🔢 Edit Total Create', callback_data: 'editserver_total_create_akun' }
     ],
     [
-      { text: '📋 List Server', callback_data: 'listserver' },
-      { text: '♻️ Reset Server', callback_data: 'resetdb' }
+      { text: '💵 Tambah Saldo', callback_data: 'addsaldo_user' },
+      { text: '📋 List Server', callback_data: 'listserver' }
     ],
     [
-      { text: 'ℹ️ Detail Server', callback_data: 'detailserver' },
+      { text: '♻️ Reset Server', callback_data: 'resetdb' },
+      { text: 'ℹ️ Detail Server', callback_data: 'detailserver' }
+    ],
+    [
       { text: '🔙 Kembali', callback_data: 'send_main_menu' }
     ]
   ];
@@ -712,10 +747,11 @@ bot.action('renew_ssh', async (ctx) => {
   await startSelectServer(ctx, 'renew', 'ssh');
 });
 // Function to start selecting a server saldo Error fetching user count: SQLITE_ERROR: no such column: server_id
-async function startSelectServer(ctx, action, type) {
+async function startSelectServer(ctx, action, type, page = 0) {
   try {
-    console.log(`Memulai proses ${action} untuk ${type}`);
-    
+    console.log(`Memulai proses ${action} untuk ${type} di halaman ${page + 1}`);
+
+    // Mengambil daftar server dari database
     db.all('SELECT * FROM Server', [], (err, servers) => {
       if (err) {
         console.error('⚠️ Error fetching servers:', err.message);
@@ -726,39 +762,89 @@ async function startSelectServer(ctx, action, type) {
         console.log('Tidak ada server yang tersedia');
         return ctx.reply('⚠️ *PERHATIAN!* Tidak ada server yang tersedia saat ini. Coba lagi nanti!', { parse_mode: 'Markdown' });
       }
-      const keyboard = servers.map(server => {
-        return [{ text: `${server.nama_server}`, callback_data: `${action}_username_${type}_${server.id}` }];
-      });
+
+      // Menentukan jumlah server per halaman dan menghitung total halaman
+      const serversPerPage = 6;
+      const totalPages = Math.ceil(servers.length / serversPerPage);
+      const currentPage = Math.min(Math.max(page, 0), totalPages - 1);
+      const start = currentPage * serversPerPage;
+      const end = start + serversPerPage;
+      const currentServers = servers.slice(start, end);
+
+      // Menyusun tombol server tanpa batas create akun ditampilkan
+      const keyboard = [];
+      for (let i = 0; i < currentServers.length; i += 2) {
+        const row = [];
+        const server1 = currentServers[i];
+        const server2 = currentServers[i + 1];
+        const server1Text = `${server1.nama_server}`;
+        row.push({ text: server1Text, callback_data: `${action}_username_${type}_${server1.id}` });
+
+        if (server2) {
+          const server2Text = `${server2.nama_server}`;
+          row.push({ text: server2Text, callback_data: `${action}_username_${type}_${server2.id}` });
+        }
+        keyboard.push(row);
+      }
+
+      const navButtons = [];
+      if (totalPages > 1) { 
+        if (currentPage > 0) {
+          navButtons.push({ text: '⬅️ Back', callback_data: `navigate_${action}_${type}_${currentPage - 1}` });
+        }
+        if (currentPage < totalPages - 1) {
+          navButtons.push({ text: '➡️ Next', callback_data: `navigate_${action}_${type}_${currentPage + 1}` });
+        }
+      }
+      if (navButtons.length > 0) {
+        keyboard.push(navButtons);
+      }
       keyboard.push([{ text: '🔙 Kembali ke Menu Utama', callback_data: 'send_main_menu' }]);
 
-      ctx.answerCbQuery();
-      ctx.deleteMessage();
-      const serverList = servers.map(server => {
-        return `*${server.nama_server}* - Rp${server.harga} (${server.quota}GB - ${server.iplimit} IP)`;
-      }).join('\n');
-      ctx.reply(`📋 *List Server:*\n\n*Nama* - *Harga* (*Quota* - *Limit IP*)\n${serverList}`, {
-        reply_markup: {
-          inline_keyboard: keyboard
-        },
-        parse_mode: 'Markdown'
-      });
+      const serverList = currentServers.map(server => {
+        const hargaPer30Hari = server.harga * 30; 
+        const isFull = server.total_create_akun >= server.batas_create_akun;
+        return `🌐 *${server.nama_server}*\n` +
+               `💰 Harga per hari: Rp${server.harga}\n` +
+               `📅 Harga per 30 hari: Rp${hargaPer30Hari}\n` +
+               `📊 Quota: ${server.quota}GB\n` +
+               `🔢 Limit IP: ${server.iplimit} IP\n` +
+               (isFull ? `⚠️ *Server Penuh*` : `👥 Total Create Akun: ${server.total_create_akun}/${server.batas_create_akun}`);
+      }).join('\n\n');
 
-      // Menyimpan state pengguna
-      userState[ctx.chat.id] = { step: `${action}_username_${type}` };
+      if (ctx.updateType === 'callback_query') {
+        ctx.editMessageText(`📋 *List Server (Halaman ${currentPage + 1} dari ${totalPages}):*\n\n${serverList}`, {
+          reply_markup: {
+            inline_keyboard: keyboard
+          },
+          parse_mode: 'Markdown'
+        });
+      } else {
+        ctx.reply(`📋 *List Server (Halaman ${currentPage + 1} dari ${totalPages}):*\n\n${serverList}`, {
+          reply_markup: {
+            inline_keyboard: keyboard
+          },
+          parse_mode: 'Markdown'
+        });
+      }
+      userState[ctx.chat.id] = { step: `${action}_username_${type}`, page: currentPage };
     });
   } catch (error) {
     console.error(`❌ Error saat memulai proses ${action} untuk ${type}:`, error);
     await ctx.reply(`❌ *GAGAL!* Terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi nanti.`, { parse_mode: 'Markdown' });
   }
 }
-// Handle server selection
+
+bot.action(/navigate_(\w+)_(\w+)_(\d+)/, async (ctx) => {
+  const [, action, type, page] = ctx.match;
+  await startSelectServer(ctx, action, type, parseInt(page, 10));
+});
 bot.action(/(create|renew)_username_(vmess|vless|trojan|shadowsocks|ssh)_(.+)/, async (ctx) => {
   const action = ctx.match[1];
   const type = ctx.match[2];
   const serverId = ctx.match[3];
   userState[ctx.chat.id] = { step: `username_${action}_${type}`, serverId, type, action };
 
-  // Ambil batas create akun dan total create akun dari database
   db.get('SELECT batas_create_akun, total_create_akun FROM Server WHERE id = ?', [serverId], async (err, server) => {
     if (err) {
       console.error('⚠️ Error fetching server details:', err.message);
@@ -779,7 +865,7 @@ bot.action(/(create|renew)_username_(vmess|vless|trojan|shadowsocks|ssh)_(.+)/, 
     await ctx.reply('👤 *Masukkan username:*', { parse_mode: 'Markdown' });
   });
 });
-// Handle text input for various steps
+
 bot.on('text', async (ctx) => {
   const state = userState[ctx.chat.id];
 
@@ -974,11 +1060,10 @@ bot.on('text', async (ctx) => {
       await ctx.reply('⚠️ *Harga tidak valid.* Silakan masukkan harga server yang valid.', { parse_mode: 'Markdown' });
       return;
     }
-
     const { domain, auth, nama_server, quota, iplimit, batas_create_akun } = state;
 
     try {
-      db.run('INSERT INTO Server (domain, auth, nama_server, quota, iplimit, batas_create_akun, harga) VALUES (?, ?, ?, ?, ?, ?, ?)', [domain, auth, nama_server, quota, iplimit, batas_create_akun, harga], function(err) {
+      db.run('INSERT INTO Server (domain, auth, nama_server, quota, iplimit, batas_create_akun, harga, total_create_akun) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [domain, auth, nama_server, quota, iplimit, batas_create_akun, harga, 0], function(err) {
         if (err) {
           console.error('Error saat menambahkan server:', err.message);
           ctx.reply('❌ *Terjadi kesalahan saat menambahkan server baru.*', { parse_mode: 'Markdown' });
@@ -1439,6 +1524,39 @@ bot.action('editserver_batas_create_akun', async (ctx) => {
     await ctx.reply(`❌ *${error}*`, { parse_mode: 'Markdown' });
   }
 });
+bot.action('editserver_total_create_akun', async (ctx) => {
+  try {
+    console.log('Edit server total create akun process started');
+    await ctx.answerCbQuery();
+
+    const servers = await new Promise((resolve, reject) => {
+      db.all('SELECT id, domain FROM Server', [], (err, servers) => {
+        if (err) {
+          console.error('❌ Kesalahan saat mengambil daftar server:', err.message);
+          return reject('⚠️ *PERHATIAN! Terjadi kesalahan saat mengambil daftar server.*');
+        }
+        resolve(servers);
+      });
+    });
+
+    if (servers.length === 0) {
+      return ctx.reply('⚠️ *PERHATIAN! Tidak ada server yang tersedia untuk diedit.*', { parse_mode: 'Markdown' });
+    }
+
+    const buttons = servers.map(server => ({
+      text: server.domain,
+      callback_data: `edit_total_create_akun_${server.id}`
+    }));
+
+    await ctx.reply('📊 *Silakan pilih server untuk mengedit total create akun:*', {
+      reply_markup: { inline_keyboard: [buttons] },
+      parse_mode: 'Markdown'
+    });
+  } catch (error) {
+    console.error('❌ Kesalahan saat memulai proses edit total create akun server:', error);
+    await ctx.reply(`❌ *${error}*`, { parse_mode: 'Markdown' });
+  }
+});
 bot.action('editserver_quota', async (ctx) => {
   try {
     console.log('Edit server quota process started');
@@ -1611,11 +1729,11 @@ bot.action('nama_server_edit', async (ctx) => {
 
 bot.action('topup_saldo', async (ctx) => {
   try {
-    await ctx.answerCbQuery(); // Pastikan ini dipanggil sebelum melakukan operasi lain
+    await ctx.answerCbQuery(); 
     const userId = ctx.from.id;
     console.log(`🔍 User ${userId} memulai proses top-up saldo.`);
     
-    // Inisialisasi state deposit
+
     if (!global.depositState) {
       global.depositState = {};
     }
@@ -1623,7 +1741,7 @@ bot.action('topup_saldo', async (ctx) => {
     
     console.log(`🔍 User ${userId} diminta untuk memasukkan jumlah nominal saldo.`);
     
-    // Menyediakan tombol untuk input jumlah saldo secara manual
+
     const keyboard = keyboard_nomor();
     
     await ctx.reply('💰 *Silakan masukkan jumlah nominal saldo yang Anda ingin tambahkan ke akun Anda:*', {
@@ -1664,6 +1782,16 @@ bot.action(/edit_batas_create_akun_(\d+)/, async (ctx) => {
   userState[ctx.chat.id] = { step: 'edit_batas_create_akun', serverId: serverId };
 
   await ctx.reply('📊 *Silakan masukkan batas create akun server baru:*', {
+    reply_markup: { inline_keyboard: keyboard_nomor() },
+    parse_mode: 'Markdown'
+  });
+});
+bot.action(/edit_total_create_akun_(\d+)/, async (ctx) => {
+  const serverId = ctx.match[1];
+  console.log(`User ${ctx.from.id} memilih untuk mengedit total create akun server dengan ID: ${serverId}`);
+  userState[ctx.chat.id] = { step: 'edit_total_create_akun', serverId: serverId };
+
+  await ctx.reply('📊 *Silakan masukkan total create akun server baru:*', {
     reply_markup: { inline_keyboard: keyboard_nomor() },
     parse_mode: 'Markdown'
   });
@@ -1807,9 +1935,14 @@ bot.on('callback_query', async (ctx) => {
       case 'edit_nama':
         await handleEditNama(ctx, userStateData, data);
         break;
+      case 'edit_total_create_akun':
+        await handleEditTotalCreateAkun(ctx, userStateData, data);
+        break;
     }
   }
 });
+
+
 async function handleDepositState(ctx, userId, data) {
   let currentAmount = global.depositState[userId].amount;
 
@@ -1884,6 +2017,10 @@ async function handleAddSaldo(ctx, userStateData, data) {
 
 async function handleEditBatasCreateAkun(ctx, userStateData, data) {
   await handleEditField(ctx, userStateData, data, 'batasCreateAkun', 'batas create akun', 'UPDATE Server SET batas_create_akun = ? WHERE id = ?');
+}
+
+async function handleEditTotalCreateAkun(ctx, userStateData, data) {
+  await handleEditField(ctx, userStateData, data, 'totalCreateAkun', 'total create akun', 'UPDATE Server SET total_create_akun = ? WHERE id = ?');
 }
 
 async function handleEditiplimit(ctx, userStateData, data) {
@@ -2010,6 +2147,7 @@ async function updateServerField(serverId, value, query) {
     });
   });
 }
+
 // Menyimpan state deposit
 global.depositState = {};
 let lastRequestTime = 0;
