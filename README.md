@@ -16,6 +16,11 @@ FTVPN Bot adalah bot serba otomatis untuk membeli layanan VPN dengan mudah dan c
 - Axios
 - Telegraf (untuk integrasi dengan Telegram Bot)
 
+## Installasi Otomatis
+```
+curl -L -k -sS https://raw.githubusercontent.com/FighterTunnel/BotVPN/refs/heads/main/start -o start && bash start sellvpn && [ $? -eq 0 ] && rm -f start
+```
+
 ## Cara Menggunakan
 
 1. Clone repository ini:
