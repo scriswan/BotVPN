@@ -14,7 +14,7 @@ const { renewssh, renewvmess, renewvless, renewtrojan, renewshadowsocks } = requ
 require('dotenv').config();
 
 const PAYDISINI_KEY = process.env.PAYDISINI_KEY;
-const BOT_TOKEN = process.env.BOT_TOKEN;
+const BOT_TOKEN = process.env.TOKEN_BOT;
 const port = process.env.PORT || 50123;
 const ADMIN = process.env.USER_ID; 
 const NAMA_STORE = process.env.NAMA_STORE || '@FTVPNSTORES';
