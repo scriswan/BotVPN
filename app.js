@@ -108,11 +108,11 @@ bot.command('admin', async (ctx) => {
 async function sendMainMenu(ctx) {
   const keyboard = [
     [
-      { text: '🍏 Service Create', callback_data: 'service_create' },
-      { text: '🍊 Service Renew', callback_data: 'service_renew' }
+      { text: '➕ Buat Akun', callback_data: 'service_create' },
+      { text: '♻️ Perpanjang Akun', callback_data: 'service_renew' }
     ],
     [
-      { text: '💰 Top Up Saldo', callback_data: 'topup_saldo' },
+      { text: '💰 TopUp Saldo', callback_data: 'topup_saldo' },
       { text: '💳 Cek Saldo', callback_data: 'cek_saldo' }
     ],
   ];
@@ -562,20 +562,20 @@ async function handleServiceAction(ctx, action) {
   let keyboard;
   if (action === 'create') {
     keyboard = [
-      [{ text: '🍎 Create SSH/OVPN', callback_data: 'create_ssh' }],      
-      [{ text: '🍌 Create Vmess', callback_data: 'create_vmess' }],
-      [{ text: '🍇 Create Vless', callback_data: 'create_vless' }],
-      [{ text: '🍉 Create Trojan', callback_data: 'create_trojan' }],
-      [{ text: '🍓 Create Shadowsocks', callback_data: 'create_shadowsocks' }],
+      [{ text: 'Buat Ssh/Ovpn', callback_data: 'create_ssh' }],      
+      [{ text: 'Buat Vmess', callback_data: 'create_vmess' }],
+      [{ text: 'Buat Vless', callback_data: 'create_vless' }],
+      [{ text: 'Buat Trojan', callback_data: 'create_trojan' }],
+      [{ text: 'Buat Shadowsocks', callback_data: 'create_shadowsocks' }],
       [{ text: '🔙 Kembali', callback_data: 'send_main_menu' }]
     ];
   } else if (action === 'renew') {
     keyboard = [
-      [{ text: '🍎 Renew SSH/OVPN', callback_data: 'renew_ssh' }],      
-      [{ text: '🍌 Renew Vmess', callback_data: 'renew_vmess' }],
-      [{ text: '🍇 Renew Vless', callback_data: 'renew_vless' }],
-      [{ text: '🍉 Renew Trojan', callback_data: 'renew_trojan' }],
-      [{ text: '🍓 Renew Shadowsocks', callback_data: 'renew_shadowsocks' }],
+      [{ text: 'Perpanjang Ssh/Ovpn', callback_data: 'renew_ssh' }],      
+      [{ text: 'Perpanjang Vmess', callback_data: 'renew_vmess' }],
+      [{ text: 'Perpanjang Vless', callback_data: 'renew_vless' }],
+      [{ text: 'Perpanjang Trojan', callback_data: 'renew_trojan' }],
+      [{ text: 'Perpanjang Shadowsocks', callback_data: 'renew_shadowsocks' }],
       [{ text: '🔙 Kembali', callback_data: 'send_main_menu' }]
     ];
   } 
