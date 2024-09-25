@@ -1,3 +1,4 @@
+const os = require('os');
 const sqlite3 = require('sqlite3').verbose();
 const express = require('express');
 const crypto = require('crypto');
@@ -117,9 +118,9 @@ async function sendMainMenu(ctx) {
     ],
   ];
 
-  const uptime = process.uptime();
+  const uptime = os.uptime();
   const uptimeDays = Math.floor(uptime / 86400);
-  const formattedUptime = `${uptimeDays} hari`;
+  const days = Math.floor(uptime / (60 * 60 * 24));
   
   // Mengambil jumlah server yang tersedia dari database
   let jumlahServer = 0;
@@ -153,13 +154,14 @@ async function sendMainMenu(ctx) {
     console.error('Kesalahan saat mengambil jumlah pengguna:', err.message);
   }
 
-  const messageText = `*Selamat datang di ${NAMA_STORE}, Powered by FTVPN* 🚀
+  const messageText = `*Selamat datang di ${NAMA_STORE},
+Powered by FTVPN* 🚀
 Bot VPN serba otomatis untuk membeli
 layanan VPN dengan mudah dan cepat
 Nikmati kemudahan dan kecepatan
 dalam layanan VPN dengan bot kami!
 
-⏳ *Uptime bot:* ${formattedUptime}
+⏳ *Uptime bot:* ${formattedUptime} Hari
 🌐 *Server tersedia:* ${jumlahServer}
 👥 *Jumlah pengguna:* ${jumlahPengguna}
 
