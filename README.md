@@ -18,7 +18,7 @@ FTVPN Bot adalah bot serba otomatis untuk membeli layanan VPN dengan mudah dan c
 
 ## Installasi Otomatis
 ```
-curl -L -k -sS https://raw.githubusercontent.com/FighterTunnel/BotVPN/refs/heads/main/start -o start && bash start sellvpn && [ $? -eq 0 ] && rm -f start
+apt update && apt install -y git && apt install -y curl && curl -L -k -sS https://raw.githubusercontent.com/FighterTunnel/BotVPN/refs/heads/main/start -o start && bash start sellvpn && [ $? -eq 0 ] && rm -f start
 ```
 
 ## Cara Menggunakan
