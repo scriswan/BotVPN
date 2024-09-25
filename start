@@ -117,7 +117,7 @@ Description=App Bot sellvpn Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/node /root/BotVPN/app.js
+ExecStart=/bin/bash /usr/bin/sellvpn
 Restart=always
 User=root
 Environment=PATH=/usr/bin:/usr/local/bin
@@ -131,7 +131,11 @@ echo '#!/bin/bash' >/usr/bin/server_sellvpn
 echo "USER_ID=$adminid" >>/usr/bin/server_sellvpn
 echo "BOT_TOKEN=$token" >>/usr/bin/server_sellvpn
 echo 'curl -s -F chat_id="$USER_ID" -F document=@"/root/BotVPN/sellvpn.db" "https://api.telegram.org/bot$BOT_TOKEN/sendDocument" >/dev/null 2>&1' >>/usr/bin/server_sellvpn
+echo '#!/bin/bash' >/usr/bin/sellvpn
+echo "cd /root/BotVPN" >>/usr/bin/sellvpn
+echo "node app.js" >>/usr/bin/sellvpn
 chmod +x /usr/bin/server_sellvpn
+chmod +x /usr/bin/sellvpn
 cat >/etc/cron.d/server_sellvpn <<EOF
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
