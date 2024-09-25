@@ -24,7 +24,6 @@ const bot = new Telegraf(BOT_TOKEN);
 const adminIds = ADMIN;
 console.log('Bot initialized');
 
-// Koneksi ke SQLite3
 const db = new sqlite3.Database('./sellvpn.db', (err) => {
   if (err) {
     console.error('Kesalahan koneksi SQLite3:', err.message);
@@ -33,7 +32,6 @@ const db = new sqlite3.Database('./sellvpn.db', (err) => {
   }
 });
 
-// Buat tabel Server dan users jika belum ada
 db.run(`CREATE TABLE IF NOT EXISTS Server (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   domain TEXT,
@@ -65,14 +63,12 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   }
 });
 
-// Menyimpan state pengguna
 const userState = {};
 console.log('User state initialized');
 
 bot.command(['start', 'menu'], async (ctx) => {
   console.log('Start or Menu command received');
   
-  // Menyimpan user_id
   const userId = ctx.from.id;
   db.get('SELECT * FROM users WHERE user_id = ?', [userId], (err, row) => {
     if (err) {
@@ -119,10 +115,8 @@ async function sendMainMenu(ctx) {
   ];
 
   const uptime = os.uptime();
-  const uptimeDays = Math.floor(uptime / 86400);
   const days = Math.floor(uptime / (60 * 60 * 24));
   
-  // Mengambil jumlah server yang tersedia dari database
   let jumlahServer = 0;
   try {
     const row = await new Promise((resolve, reject) => {
@@ -161,7 +155,7 @@ layanan VPN dengan mudah dan cepat
 Nikmati kemudahan dan kecepatan
 dalam layanan VPN dengan bot kami!
 
-⏳ *Uptime bot:* ${formattedUptime} Hari
+⏳ *Uptime bot:* ${days} Hari
 🌐 *Server tersedia:* ${jumlahServer}
 👥 *Jumlah pengguna:* ${jumlahPengguna}
 
@@ -1406,7 +1400,6 @@ bot.action(/next_users_(\d+)/, async (ctx) => {
       }]);
     }
 
-    // Menambahkan tombol navigasi ke replyMarkup
     replyMarkup.inline_keyboard.push(...navigationButtons);
 
     await ctx.editMessageReplyMarkup(replyMarkup);
@@ -1418,7 +1411,7 @@ bot.action(/next_users_(\d+)/, async (ctx) => {
 
 bot.action(/prev_users_(\d+)/, async (ctx) => {
   const currentPage = parseInt(ctx.match[1]);
-  const offset = (currentPage - 1) * 20; // Menghitung offset berdasarkan halaman sebelumnya
+  const offset = (currentPage - 1) * 20; 
 
   try {
     console.log(`Previous users process started for page ${currentPage}`);
@@ -1466,7 +1459,6 @@ bot.action(/prev_users_(\d+)/, async (ctx) => {
       inline_keyboard: [...buttons]
     };
 
-    // Menambahkan tombol navigasi
     const navigationButtons = [];
     if (currentPage > 0) {
       navigationButtons.push([{
@@ -1481,7 +1473,6 @@ bot.action(/prev_users_(\d+)/, async (ctx) => {
       }]);
     }
 
-    // Menambahkan tombol navigasi ke replyMarkup
     replyMarkup.inline_keyboard.push(...navigationButtons);
 
     await ctx.editMessageReplyMarkup(replyMarkup);
