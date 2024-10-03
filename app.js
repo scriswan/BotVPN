@@ -854,7 +854,6 @@ bot.action(/(create|renew)_username_(vmess|vless|trojan|shadowsocks|ssh)_(.+)/, 
     await ctx.reply('👤 *Masukkan username:*', { parse_mode: 'Markdown' });
   });
 });
-
 bot.on('text', async (ctx) => {
   const state = userState[ctx.chat.id];
 
@@ -864,6 +863,12 @@ bot.on('text', async (ctx) => {
     state.username = ctx.message.text.trim();
     if (!state.username) {
       return ctx.reply('❌ *Username tidak valid. Masukkan username yang valid.*', { parse_mode: 'Markdown' });
+    }
+    if (state.username.length < 3 || state.username.length > 20) {
+      return ctx.reply('❌ *Username harus terdiri dari 3 hingga 20 karakter.*', { parse_mode: 'Markdown' });
+    }
+    if (/[^a-zA-Z0-9]/.test(state.username)) {
+      return ctx.reply('❌ *Username tidak boleh mengandung karakter khusus atau spasi.*', { parse_mode: 'Markdown' });
     }
     const { username, serverId, type, action } = state;
     if (action === 'create') {
@@ -883,12 +888,25 @@ bot.on('text', async (ctx) => {
     if (!state.password) {
       return ctx.reply('❌ *Password tidak valid. Masukkan password yang valid.*', { parse_mode: 'Markdown' });
     }
+    if (state.password.length < 6) {
+      return ctx.reply('❌ *Password harus terdiri dari minimal 6 karakter.*', { parse_mode: 'Markdown' });
+    }
+    if (/[^a-zA-Z0-9]/.test(state.password)) {
+      return ctx.reply('❌ *Password tidak boleh mengandung karakter khusus atau spasi.*', { parse_mode: 'Markdown' });
+    }
     state.step = `exp_${state.action}_${state.type}`;
     await ctx.reply('⏳ *Masukkan masa aktif (hari):*', { parse_mode: 'Markdown' });
   } else if (state.step.startsWith('exp_')) {
-    const exp = parseInt(ctx.message.text.trim(), 10);
+    const expInput = ctx.message.text.trim();
+    if (!/^\d+$/.test(expInput)) {
+      return ctx.reply('❌ *Masa aktif tidak valid. Masukkan angka yang valid.*', { parse_mode: 'Markdown' });
+    }
+    const exp = parseInt(expInput, 10);
     if (isNaN(exp) || exp <= 0) {
       return ctx.reply('❌ *Masa aktif tidak valid. Masukkan angka yang valid.*', { parse_mode: 'Markdown' });
+    }
+    if (exp > 365) {
+      return ctx.reply('❌ *Masa aktif tidak boleh lebih dari 365 hari.*', { parse_mode: 'Markdown' });
     }
     state.exp = exp;
 
