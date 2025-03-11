@@ -56,7 +56,7 @@ setup_bot() {
     fi
 
     if [ ! -f /root/BotVPN/app.js ]; then
-        git https://github.com/scriswan/BotVPN/root/BotVPN
+        git https://github.com/scriswan/BotVPN.git /root/BotVPN
     fi
 
     if ! npm list --prefix /root/BotVPN express telegraf axios moment sqlite3 >/dev/null 2>&1; then
